@@ -34,7 +34,7 @@ sanitize-html is not written in Typescript and there is no plan to directly supp
 
 ### Browser
 
-*Think first: why do you want to use it in the browser?* Remember, *servers must never trust browsers.* You can't sanitize HTML for saving on the server anywhere else but on the server.
+*Think first: why do you want to use it in the browser?* Remember, *servers must never trust browsers*. You can't sanitize HTML for saving on the server anywhere else but on the server.
 
 But, perhaps you'd like to display sanitized HTML immediately in the browser for preview. Or ask the browser to do the sanitization work on every page load. You can if you want to!
 
@@ -84,6 +84,8 @@ const dirty = 'some really tacky HTML';
 const clean = sanitizeHtml(dirty);
 ```
 
+Here's a [demo](https://runkit.com/george-hill/607727a862a0150013483c2e).
+
 That will allow our [default list of allowed tags and attributes](#default-options) through. It's a nice set, but probably not quite what you want. So:
 
 ```js
@@ -98,6 +100,8 @@ const clean = sanitizeHtml(dirty, {
 ```
 
 Boom!
+
+[Demo.](https://runkit.com/george-hill/60804840902a6c001a5c0f20)
 
 ### Default options
 
@@ -162,13 +166,19 @@ allowedTags: [],
 allowedAttributes: {}
 ```
 
+[Demo.](https://runkit.com/george-hill/60804b5828234e001afb4372)
+
 #### "What if I want disallowed tags to be escaped rather than discarded?"
 
 If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags is still included, depending on whether the individual subtags are allowed.
 
 If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rather than discarded. Any text or subtags is handled normally.
 
+[Demo.](https://runkit.com/george-hill/60804dabb71f9b001a450566)
+
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
+
+[Demo.](https://runkit.com/george-hill/608d3e8bed59f2001bd4b115)
 
 #### "What if I want to allow only specific values on some attributes?"
 
@@ -224,6 +234,8 @@ const clean = sanitizeHtml(dirty, {
 });
 ```
 
+[Demo.](https://runkit.com/george-hill/608d422bc22c86001a5cf9c8)
+
 Similar to `allowedAttributes`, you can use `*` as a tag name, to allow listed classes to be valid for any tag:
 ```js
 allowedClasses: {
@@ -262,9 +274,11 @@ const clean = sanitizeHtml(dirty, {
       });
 ```
 
+[Demo.](https://runkit.com/george-hill/608d4456185fcc001aebb26e)
+
 ### Discarding text outside of ```<html></html>``` tags
 
-Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesireable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
+Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesirable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
 
 Setting this option to true will instruct sanitize-html to discard all characters outside of `html` tag boundaries -- before `<html>` and after `</html>` tags.
 
@@ -332,6 +346,8 @@ const clean = sanitizeHtml(dirty, {
 });
 ```
 
+[Demo.](https://runkit.com/george-hill/608d48848ee2b1001aeaf005)
+
 The `simpleTransform` helper method has 3 parameters:
 
 ```js
@@ -362,6 +378,8 @@ To a link with anchor text:
 ```js
 <a href="http://somelink.com">Some text</a>
 ```
+
+[Demo.](https://runkit.com/george-hill/608d49f2185fcc001aebb5a7)
 
 ### Filters
 
@@ -405,13 +423,15 @@ sanitizeHtml(
   '<p>some text...</p>',
   {
     textFilter: function(text, tagName) {
-      if (['a'].indexOf(tagName) > -1) return //Skip anchor tags
+      if (['a'].indexOf(tagName) > -1) return text; // Skip anchor tags.
 
       return text.replace(/\.\.\./, '&hellip;');
     }
   }
 );
 ```
+
+[Demo.](https://runkit.com/george-hill/608d568fed59f2001bd4bdb4)
 
 Note that the text passed to the `textFilter` method is already escaped for safe display as HTML. You may add markup and use entity escape sequences in your `textFilter`.
 
