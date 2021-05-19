@@ -532,7 +532,9 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
 
-      result += '</' + name + '>';
+      if (options.useAutoClosingTag) {
+        result += '</' + name + '>';
+      }
       if (skip) {
         result = tempResult + escapeHtml(result);
         tempResult = '';
@@ -746,7 +748,8 @@ sanitizeHtml.defaults = {
   allowedSchemesByTag: {},
   allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
   allowProtocolRelative: true,
-  enforceHtmlBoundary: false
+  enforceHtmlBoundary: false,
+  useAutoClosingTag: true
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
