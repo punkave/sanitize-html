@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Changes "whitelist" terminology to "allowlist."
+
 ## 2.4.0 (2021-05-19):
 - Added support for class names with wildcards in `allowedClasses`. Thanks to [zhangbenber](https://github.com/zhangbenber) for the contribution.
 

@@ -13,7 +13,7 @@ describe('sanitizeHtml', function() {
       allowedAttributes: false
     }), 'before &lt;img src="test.png" /&gt; after');
   });
-  it('should pass through simple well-formed whitelisted markup', function() {
+  it('should pass through simple well-formed allowlisted markup', function() {
     assert.equal(sanitizeHtml('<div><p>Hello <b>there</b></p></div>'), '<div><p>Hello <b>there</b></p></div>');
   });
   it('should not pass through any text outside html tag boundary since html tag is found and option is ON', function() {
@@ -43,16 +43,16 @@ describe('sanitizeHtml', function() {
   it('should respect text nodes at top level', function() {
     assert.equal(sanitizeHtml('Blah blah blah<p>Whee!</p>'), 'Blah blah blah<p>Whee!</p>');
   });
-  it('should reject markup not whitelisted without destroying its text', function() {
+  it('should reject markup not allowlisted without destroying its text', function() {
     assert.equal(sanitizeHtml('<div><wiggly>Hello</wiggly></div>'), '<div>Hello</div>');
   });
-  it('should escape markup not whitelisted', function() {
+  it('should escape markup not allowlisted', function() {
     assert.equal(sanitizeHtml('<div><wiggly>Hello</wiggly></div>', { disallowedTagsMode: 'escape' }), '<div>&lt;wiggly&gt;Hello&lt;/wiggly&gt;</div>');
   });
   it('should accept a custom list of allowed tags', function() {
     assert.equal(sanitizeHtml('<blue><red><green>Cheese</green></red></blue>', { allowedTags: [ 'blue', 'green' ] }), '<blue><green>Cheese</green></blue>');
   });
-  it('should reject attributes not whitelisted', function() {
+  it('should reject attributes not allowlisted', function() {
     assert.equal(sanitizeHtml('<a href="foo.html" whizbang="whangle">foo</a>'), '<a href="foo.html">foo</a>');
   });
   it('should accept a custom list of allowed attributes per element', function() {
@@ -340,7 +340,7 @@ describe('sanitizeHtml', function() {
       '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />'
     );
   });
-  it('should allow specific classes when whitelisted with allowedClasses for a single tag', function() {
+  it('should allow specific classes when allowlisted with allowedClasses for a single tag', function() {
     assert.equal(
       sanitizeHtml(
         '<p class="nifty simple dippy">whee</p>',
@@ -354,7 +354,7 @@ describe('sanitizeHtml', function() {
       '<p class="nifty">whee</p>'
     );
   });
-  it('should allow specific classes when whitelisted with allowedClasses for all tags', function() {
+  it('should allow specific classes when allowlisted with allowedClasses for all tags', function() {
     assert.equal(
       sanitizeHtml(
         '<p class="nifty simple dippy">whee</p><div class="dippy nifty simple"></div>',
@@ -368,7 +368,7 @@ describe('sanitizeHtml', function() {
       '<p class="nifty">whee</p><div class="nifty"></div>'
     );
   });
-  it('should allow all classes that are whitelisted for a single tag or all tags', function() {
+  it('should allow all classes that are allowlisted for a single tag or all tags', function() {
     assert.equal(
       sanitizeHtml(
         '<p class="nifty simple dippy">whee</p><div class="simple dippy nifty"></div>',
@@ -399,7 +399,7 @@ describe('sanitizeHtml', function() {
       '<p class="nifty- nifty-a dippy-a-simple">whee</p>'
     );
   });
-  it('should allow all classes if whitelist contains a sigle `*`', function() {
+  it('should allow all classes if allowlist contains a sigle `*`', function() {
     assert.equal(
       sanitizeHtml(
         '<p class="nifty simple dippy">whee</p>',
@@ -517,7 +517,7 @@ describe('sanitizeHtml', function() {
     console.warn.restore();
   });
 
-  it('should allow only whitelisted attributes, but to any tags, if tag is declared as  "*"', function() {
+  it('should allow only allowlisted attributes, but to any tags, if tag is declared as  "*"', function() {
     assert.equal(
       sanitizeHtml(
         '<table bgcolor="1" align="left" notlisted="0"><img src="1.gif" align="center" alt="not listed too"/></table>',
@@ -893,7 +893,7 @@ describe('sanitizeHtml', function() {
       }), '<span style="color:yellow;text-align:center;font-family:helvetica"></span>'
     );
   });
-  it('Should allow hostnames in an iframe that are whitelisted', function() {
+  it('Should allow hostnames in an iframe that are allowlisted', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -906,7 +906,7 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should remove iframe src urls that are not included in whitelisted hostnames', function() {
+  it('Should remove iframe src urls that are not included in allowlisted hostnames', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.embed.vevo.com/USUV71704255"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -944,7 +944,7 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should allow domains in an iframe that are whitelisted', function() {
+  it('Should allow domains in an iframe that are allowlisted', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.foo.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -957,7 +957,7 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.foo.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should allow second-level domains in an iframe that are whitelisted', function() {
+  it('Should allow second-level domains in an iframe that are allowlisted', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -970,7 +970,7 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://zoom.us/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should remove iframe src urls that are not included in whitelisted domains', function() {
+  it('Should remove iframe src urls that are not included in allowlisted domains', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.prefix.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -983,7 +983,7 @@ describe('sanitizeHtml', function() {
       }), '<iframe></iframe>'
     );
   });
-  it('Should remove iframe src urls with host that ends as whitelisted domains ' +
+  it('Should remove iframe src urls with host that ends as allowlisted domains ' +
      ' but not preceeded with a dot', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.zoomzoom.us/embed/c2IlcS7AHxM"></iframe>', {
@@ -997,8 +997,8 @@ describe('sanitizeHtml', function() {
       }), '<iframe></iframe>'
     );
   });
-  it('Should allow hostnames in an iframe that are whitelisted in allowedIframeHostnames ' +
-     'and are not whitelisted in allowedIframeDomains', function() {
+  it('Should allow hostnames in an iframe that are allowlisted in allowedIframeHostnames ' +
+     'and are not allowlisted in allowedIframeDomains', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -1012,8 +1012,8 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should allow hostnames in an iframe that are not whitelisted in allowedIframeHostnames ' +
-     'and are whitelisted in allowedIframeDomains', function() {
+  it('Should allow hostnames in an iframe that are not allowlisted in allowedIframeHostnames ' +
+     'and are allowlisted in allowedIframeDomains', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -1065,7 +1065,7 @@ describe('sanitizeHtml', function() {
       }), '<iframe></iframe>'
     );
   });
-  it('Should remove relative URLs for iframes when whitelisted hostnames specified', function() {
+  it('Should remove relative URLs for iframes when allowlisted hostnames specified', function() {
     assert.equal(
       sanitizeHtml('<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -1078,7 +1078,7 @@ describe('sanitizeHtml', function() {
       }), '<iframe></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should allow relative and whitelisted hostname URLs for iframes', function() {
+  it('Should allow relative and allowlisted hostname URLs for iframes', function() {
     assert.equal(
       sanitizeHtml('<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: [ 'p', 'iframe', 'a', 'img', 'i' ],
@@ -1192,13 +1192,13 @@ describe('sanitizeHtml', function() {
   //       }
   //     }), '<img src="&lt;0&amp;0;0.2&amp;" />');
   // });
-  it('should escape markup not whitelisted and all its children in recursive mode', function() {
+  it('should escape markup not allowlisted and all its children in recursive mode', function() {
     assert.equal(
       sanitizeHtml('<div><wiggly>Hello<p>World</p></wiggly></div>', { disallowedTagsMode: 'recursiveEscape' }),
       '<div>&lt;wiggly&gt;Hello&lt;p&gt;World&lt;/p&gt;&lt;/wiggly&gt;</div>'
     );
   });
-  it('should escape markup not whitelisted and but not its children', function() {
+  it('should escape markup not allowlisted and but not its children', function() {
     assert.equal(
       sanitizeHtml('<div><wiggly>Hello<p>World</p></wiggly></div>', { disallowedTagsMode: 'escape' }),
       '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;/wiggly&gt;</div>'
@@ -1213,13 +1213,13 @@ describe('sanitizeHtml', function() {
       '&lt;wiggly&gt;Hello&lt;/wiggly&gt;'
     );
   });
-  it('should escape markup not whitelisted even within allowed markup', function() {
+  it('should escape markup not allowlisted even within allowed markup', function() {
     assert.equal(
       sanitizeHtml('<div><wiggly>Hello<p>World</p><tiggly>JS</tiggly></wiggly></div>', { disallowedTagsMode: 'recursiveEscape' }),
       '<div>&lt;wiggly&gt;Hello&lt;p&gt;World&lt;/p&gt;&lt;tiggly&gt;JS&lt;/tiggly&gt;&lt;/wiggly&gt;</div>'
     );
   });
-  it('should escape markup not whitelisted even within allowed markup, but not the allowed markup itself', function() {
+  it('should escape markup not allowlisted even within allowed markup, but not the allowed markup itself', function() {
     assert.equal(
       sanitizeHtml('<div><wiggly>Hello<p>World</p><tiggly>JS</tiggly></wiggly></div>', { disallowedTagsMode: 'escape' }),
       '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;tiggly&gt;JS&lt;/tiggly&gt;&lt;/wiggly&gt;</div>'
